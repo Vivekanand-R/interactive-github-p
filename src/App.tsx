@@ -258,9 +258,61 @@ function Analytics({ repos }: { repos: Repository[] }) {
     .sort(([,a], [,b]) => b - a)
     .slice(0, 5)
 
-  const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0)
-  const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0)
-  const avgStars = repos.length > 0 ? (totalStars / repos.length).toFixed(1) : '0'
+  // Generate mock data for advanced analytics
+  const generateHeatmapData = () => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const hours = Array.from({ length: 24 }, (_, i) => i)
+    
+    return days.map(day => ({
+      day,
+      hours: hours.map(hour => ({
+        hour,
+        commits: Math.floor(Math.random() * 10) + 1
+      }))
+    }))
+  }
+
+  const generateActivityData = () => {
+    const today = new Date()
+    const thisWeek = Math.floor(Math.random() * 25) + 5
+    const thisMonth = Math.floor(Math.random() * 100) + 20
+    const thisYear = Math.floor(Math.random() * 500) + 100
+    const currentStreak = Math.floor(Math.random() * 15) + 1
+    const longestStreak = Math.floor(Math.random() * 30) + 10
+    const activeDays = Math.floor(Math.random() * 40) + 60
+    
+    return {
+      thisWeek,
+      thisMonth,
+      thisYear,
+      currentStreak,
+      longestStreak,
+      activeDays
+    }
+  }
+
+  const generateContributionTypes = () => {
+    const types = ['Commits', 'Pull Requests', 'Issues', 'Code Reviews']
+    return types.map(type => ({
+      type,
+      count: Math.floor(Math.random() * 50) + 10,
+      color: ['bg-primary', 'bg-accent', 'bg-secondary', 'bg-muted'][types.indexOf(type)]
+    }))
+  }
+
+  const generateSLAData = () => {
+    return [
+      { metric: 'Code Coverage', target: 80, actual: 78, unit: '%' },
+      { metric: 'Build Success', target: 95, actual: 97, unit: '%' },
+      { metric: 'Response Time', target: 200, actual: 180, unit: 'ms' },
+      { metric: 'Uptime', target: 99.9, actual: 99.8, unit: '%' }
+    ]
+  }
+
+  const heatmapData = generateHeatmapData()
+  const activityData = generateActivityData()
+  const contributionTypes = generateContributionTypes()
+  const slaData = generateSLAData()
 
   return (
     <motion.div
@@ -269,45 +321,180 @@ function Analytics({ repos }: { repos: Repository[] }) {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Activity Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Repositories</CardTitle>
+            <CardTitle className="text-sm font-medium">Commits This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{repos.length}</div>
+            <div className="text-2xl font-bold text-primary">{activityData.thisWeek}</div>
+            <p className="text-xs text-muted-foreground mt-1">+{Math.floor(Math.random() * 10)} from last week</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Stars</CardTitle>
+            <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-accent">{totalStars}</div>
+            <div className="text-2xl font-bold text-accent">{activityData.currentStreak} days</div>
+            <p className="text-xs text-muted-foreground mt-1">Longest: {activityData.longestStreak} days</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Forks</CardTitle>
+            <CardTitle className="text-sm font-medium">Activity Rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{totalForks}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Avg Stars</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-accent">{avgStars}</div>
+            <div className="text-2xl font-bold text-primary">{activityData.activeDays}%</div>
+            <p className="text-xs text-muted-foreground mt-1">Days active this year</p>
           </CardContent>
         </Card>
       </div>
 
+      {/* Daily Heatmap */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ChartBar size={20} />
+            <Calendar size={20} />
+            Daily Contribution Heatmap
+          </CardTitle>
+          <CardDescription>Commit activity by time of day</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
+              <span>Less</span>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map(intensity => (
+                  <div
+                    key={intensity}
+                    className="w-3 h-3 rounded-sm"
+                    style={{ 
+                      backgroundColor: `hsl(var(--primary) / ${intensity * 0.2})` 
+                    }}
+                  />
+                ))}
+              </div>
+              <span>More</span>
+            </div>
+            <div className="grid grid-cols-25 gap-1 text-xs">
+              <div></div>
+              {Array.from({ length: 24 }, (_, i) => (
+                <div key={i} className="text-center text-muted-foreground">
+                  {i % 6 === 0 ? i : ''}
+                </div>
+              ))}
+              {heatmapData.map(({ day, hours }) => (
+                <div key={day} className="contents">
+                  <div className="text-muted-foreground pr-2">{day}</div>
+                  {hours.map(({ hour, commits }) => (
+                    <div
+                      key={`${day}-${hour}`}
+                      className="w-3 h-3 rounded-sm cursor-pointer hover:scale-110 transition-transform"
+                      style={{
+                        backgroundColor: `hsl(var(--primary) / ${Math.min(commits / 10, 1)})`
+                      }}
+                      title={`${day} ${hour}:00 - ${commits} commits`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Contribution Types */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ChartBar size={20} />
+              Contribution Mix
+            </CardTitle>
+            <CardDescription>Types of contributions this month</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {contributionTypes.map(({ type, count, color }) => {
+                const maxCount = Math.max(...contributionTypes.map(c => c.count))
+                const percentage = (count / maxCount) * 100
+                
+                return (
+                  <div key={type} className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium">{type}</span>
+                      <span className="text-muted-foreground">{count}</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <motion.div
+                        className={`h-full ${color} transition-all duration-1000`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${percentage}%` }}
+                        transition={{ delay: 0.2, duration: 0.8 }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SLA Targets */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Eye size={20} />
+              Performance Targets
+            </CardTitle>
+            <CardDescription>SLA targets vs actual performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {slaData.map(({ metric, target, actual, unit }) => {
+                const percentage = (actual / target) * 100
+                const isGood = actual >= target
+                
+                return (
+                  <div key={metric} className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium">{metric}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-mono ${isGood ? 'text-green-600' : 'text-red-600'}`}>
+                          {actual}{unit}
+                        </span>
+                        <span className="text-muted-foreground">/ {target}{unit}</span>
+                      </div>
+                    </div>
+                    <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="absolute inset-0 flex">
+                        <motion.div
+                          className={`h-full ${isGood ? 'bg-green-500' : 'bg-red-500'}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(percentage, 100)}%` }}
+                          transition={{ delay: 0.3, duration: 0.8 }}
+                        />
+                        <div 
+                          className="absolute top-0 w-0.5 h-full bg-foreground/40"
+                          style={{ left: `${Math.min((target / Math.max(target, actual)) * 100, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Languages Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Code size={20} />
             Top Languages
           </CardTitle>
         </CardHeader>
@@ -321,9 +508,11 @@ function Analytics({ repos }: { repos: Repository[] }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                    <div 
+                    <motion.div 
                       className="h-full bg-primary transition-all duration-500"
-                      style={{ width: `${(count / repos.length) * 100}%` }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(count / repos.length) * 100}%` }}
+                      transition={{ delay: 0.1, duration: 0.6 }}
                     />
                   </div>
                   <span className="text-sm text-muted-foreground w-8">{count}</span>
