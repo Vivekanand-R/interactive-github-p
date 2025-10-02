@@ -5,6 +5,9 @@
 
 <img width="1872" height="858" alt="image" src="https://github.com/user-attachments/assets/be7c6f32-1910-41c4-b689-d25780197d4f" />
 
+<img width="966" height="863" alt="image" src="https://github.com/user-attachments/assets/21af5276-c521-451b-8a86-d94101341273" />
+
+
 
 Just launched the brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
 
