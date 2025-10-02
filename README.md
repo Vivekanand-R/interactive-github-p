@@ -1,5 +1,12 @@
-# ✨ Welcome to Your Spark Template!
-You've just launched your brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
+# ✨ Welcome to the github space app!
+
+
+<img width="1882" height="962" alt="image" src="https://github.com/user-attachments/assets/98bd6bc7-e4b4-4fe9-ba3d-baf1e08c399d" />
+
+<img width="1883" height="808" alt="image" src="https://github.com/user-attachments/assets/21eb4ff7-dd06-40d3-945e-b191f684c939" />
+
+
+Just launched the brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
 
 This template is your blank canvas. It comes with a minimal setup to help you get started quickly with Spark development.
 
@@ -15,8 +22,8 @@ Right now, this is just a starting point — the perfect place to begin building
 🧹 Just Exploring?
 No problem! If you were just checking things out and don’t need to keep this code:
 
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
+- Simply explore.
+- Everything will be refreshed.
 
 📄 License For Spark Template Resources 
 
