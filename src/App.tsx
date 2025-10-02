@@ -444,9 +444,7 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
-            GitHub Portfolio
-          </h1>
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">GitHub Portfolio</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore my projects through interactive flashcards. Click to flip and discover detailed insights about each repository.
           </p>
@@ -556,7 +554,7 @@ function App() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
 
 export default App
