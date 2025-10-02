@@ -100,6 +100,6 @@ body {
   transform: rotateY(180deg);
 }
 
-.grid-cols-25 {
-  grid-template-columns: repeat(25, minmax(0, 1fr));
+.grid-cols-54 {
+  grid-template-columns: auto repeat(53, minmax(0, 1fr));
 }

@@ -261,13 +261,13 @@ function Analytics({ repos }: { repos: Repository[] }) {
   // Generate mock data for advanced analytics
   const generateHeatmapData = () => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const hours = Array.from({ length: 24 }, (_, i) => i)
+    const weeks = Array.from({ length: 53 }, (_, i) => i)
     
     return days.map(day => ({
       day,
-      hours: hours.map(hour => ({
-        hour,
-        commits: Math.floor(Math.random() * 10) + 1
+      weeks: weeks.map(week => ({
+        week,
+        commits: Math.floor(Math.random() * 15) + 0
       }))
     }))
   }
@@ -352,14 +352,14 @@ function Analytics({ repos }: { repos: Repository[] }) {
         </Card>
       </div>
 
-      {/* Daily Heatmap */}
+      {/* Daily Activity Heatmap */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar size={20} />
-            Daily Contribution Heatmap
+            Daily Activity Heatmap
           </CardTitle>
-          <CardDescription>Commit activity by time of day</CardDescription>
+          <CardDescription>Commit contributions over the past year</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -378,24 +378,24 @@ function Analytics({ repos }: { repos: Repository[] }) {
               </div>
               <span>More</span>
             </div>
-            <div className="grid grid-cols-25 gap-1 text-xs">
+            <div className="grid grid-cols-54 gap-1 text-xs">
               <div></div>
-              {Array.from({ length: 24 }, (_, i) => (
+              {Array.from({ length: 53 }, (_, i) => (
                 <div key={i} className="text-center text-muted-foreground">
-                  {i % 6 === 0 ? i : ''}
+                  {i % 4 === 0 ? `Week ${i + 1}` : ''}
                 </div>
               ))}
-              {heatmapData.map(({ day, hours }) => (
+              {heatmapData.map(({ day, weeks }) => (
                 <div key={day} className="contents">
-                  <div className="text-muted-foreground pr-2">{day}</div>
-                  {hours.map(({ hour, commits }) => (
+                  <div className="text-muted-foreground pr-2 text-right">{day}</div>
+                  {weeks.map(({ week, commits }) => (
                     <div
-                      key={`${day}-${hour}`}
+                      key={`${day}-${week}`}
                       className="w-3 h-3 rounded-sm cursor-pointer hover:scale-110 transition-transform"
                       style={{
-                        backgroundColor: `hsl(var(--primary) / ${Math.min(commits / 10, 1)})`
+                        backgroundColor: `hsl(var(--primary) / ${Math.min(commits / 15, 1)})`
                       }}
-                      title={`${day} ${hour}:00 - ${commits} commits`}
+                      title={`${day}, Week ${week + 1} - ${commits} commits`}
                     />
                   ))}
                 </div>
